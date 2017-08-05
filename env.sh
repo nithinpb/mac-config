@@ -27,7 +27,9 @@ function dockrmiall() { docker rmi -f $(docker images -q ); }
 function dockrm() { if [[ -z "$1" ]];then docker rm -f $(docker ps -q -f status=exited); else docker ps -a | grep hello-world | tr -s " " | cut -f 1 -d " " | xargs docker rm -f ; fi }
 function dockrmall() { docker rm -f $(docker ps -a -q ); }
 function dockrmvol() { docker volume ls -q | xargs docker volume rm ; }
-function gitpullall() { find . -type d -depth 1 -exec git --git-dir={}/.git --work-tree=$PWD/{} pull origin master \; }
+function gitpullall() { 
+  find . -maxdepth 1 -mindepth 1 -type d -exec sh -c '(echo {} && cd {} && git pull origin master)' \;
+}
 function gitstatusall() {
   find . -maxdepth 1 -mindepth 1 -type d -exec sh -c '(echo {} && cd {} && git status -s && echo)' \;
 }
